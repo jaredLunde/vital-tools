@@ -29,7 +29,7 @@ def find_packages(prefix=""):
 
 
 setup(
-    name='vital',
+    name='vital-tools',
     version='0.1.0',
     description='Vital tools for writing Python 3.5+ packages.',
     author='Jared Lunde',

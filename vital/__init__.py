@@ -10,7 +10,6 @@
 from vital import cache
 from vital import debug
 from vital import security
-from vital import structures
 from vital import tools
 
 

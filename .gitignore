@@ -56,3 +56,6 @@ target/
 # Remote Sync
 .remote-sync.json
 .DS_Store
+
+# PyPI
+.pypirc
