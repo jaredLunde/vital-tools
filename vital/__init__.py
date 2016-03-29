@@ -15,4 +15,4 @@ from vital import tools
 
 __author__ = "Jared Lunde"
 __license__ = "MIT"
-__version__ = "0.1.0"
+__version__ = "0.1.4"
