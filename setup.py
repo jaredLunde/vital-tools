@@ -38,7 +38,6 @@ setup(
     license="MIT",
     install_requires=[str(ir.req) for ir in install_reqs],
     package_dir={pkg: pkg_dir},
-    ext_modules=extensions,
     include_package_data=True,
     packages=list(find_packages(pkg))
 )
