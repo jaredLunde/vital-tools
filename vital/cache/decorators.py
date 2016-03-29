@@ -5,7 +5,10 @@
     The MIT License (MIT) © 2016 Jared Lunde
 
 """
-import asyncio
+try:
+    import asyncio
+except ImportError:
+    pass
 import time
 import collections
 import datetime
@@ -126,7 +129,6 @@ def async_lru(size=100):
                 return await some_other_slow_coroutine()
         ..
     """
-    import asyncio
     cache = collections.OrderedDict()
 
     def decorator(fn):
