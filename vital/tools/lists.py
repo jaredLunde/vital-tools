@@ -53,8 +53,8 @@ def grouped(seq, size):
     return zip(*[iter(seq)] * size)
 
 
-def flatten(seq):
-    """ Flattens a sequence e.g. |[(1, 2), (3, 4)] -> [1, 2, 3, 4]|
+def flatten(*seqs):
+    """ Flattens a sequence e.g. |[(1, 2), (3, (4, 5))] -> [1, 2, 3, 4, 5]|
 
         @seq: #tuple, #list or :class:UserList
 
@@ -66,12 +66,13 @@ def flatten(seq):
                 print(x)
         ..
     """
-    for item in seq:
-        if isinstance(item, (tuple, list, UserList)):
-            for subitem in item:
-                yield subitem
-        else:
-            yield item
+    for seq in seqs:
+        for item in seq:
+            if isinstance(item, (tuple, list, UserList)):
+                for subitem in flatten(item):
+                    yield subitem
+            else:
+                yield item
 
 
 def remove_empty(seq):

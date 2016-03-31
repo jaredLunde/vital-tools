@@ -1775,7 +1775,7 @@ class Logg(object):
         self.message = []
 
 
-logg = Logg()
+logg = Logg(pretty=True)
 
 
 class ProgressBar(object):
