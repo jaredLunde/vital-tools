@@ -45,7 +45,7 @@ from functools import wraps
 from collections import *
 
 from vital.tools.encoding import stdout_encode
-from vital.debug import colors, tlds
+from . import colors, tlds
 
 
 __all__ = (
@@ -573,6 +573,57 @@ def format_obj_name(obj, delim="<>"):
     if parent_name:
         pname = "{}{}{}".format(delim[0], get_parent_name(obj), delim[1])
     return "{}{}".format(get_obj_name(obj), pname)
+
+
+def preprX(*attributes, address=True, full_name=False,
+           pretty=False, keyless=False, **kwargs):
+    """ `Creates prettier object representations`
+
+        @*attributes: (#str) instance attributes within the object you
+            wish to display. Attributes can be recursive
+            e.g. |one.two.three| for access to |self.one.two.three|
+        @address: (#bool) |True| to include the memory address
+        @full_name: (#bool) |True| to include the full path to the
+            object vs. the qualified name
+        @pretty: (#bool) |True| to allow bolding and coloring
+        @keyless: (#bool) |True| to display the values of @attributes
+            withotu their attribute names
+        ..
+            class Foo(object):
+
+                def __init__(self, bar, baz=None):
+                    self.bar = bar
+                    self.baz = baz
+
+                __repr__ = prepr('bar', 'baz', address=False)
+
+            foo = Foo('foobar')
+            repr(foo)
+        ..
+        |<Foo:bar=`foobar`, baz=None>|
+    """
+    def _format(obj, attribute):
+        try:
+            if keyless:
+                return repr(getattr(obj, attribute))
+            else:
+                return '%s=%s' % (attribute,
+                                  repr(getattr(obj, attribute)))
+        except AttributeError:
+            return None
+
+    def prep(obj, address=address, full_name=False, pretty=False,
+             keyless=False, **kwargs):
+        if address:
+            address = ":%s" % hex(id(obj))
+        else:
+            address = ""
+        data = list(filter(lambda x: x is not None,
+                           map(lambda a: _format(obj, a), attributes)))
+        return "<{name}{data}{address}>".format(name=get_obj_name(obj),
+                                                data=', '.join(data),
+                                                address=address)
+    return prep
 
 
 class prepr(UserString):
@@ -1179,8 +1230,8 @@ class Look(object):
         for i, item in enumerate(_sequence):
             self._incr_just_size(just_size+minus)
             add_out(self._numeric_prefix(
-                i, self.pretty(item), just=just_size, color="blue",
-                separator=separator))
+                i, self.pretty(item, display=False),
+                just=just_size, color="blue", separator=separator))
             self._decr_just_size(just_size+minus)
         if not self._depth:
             return padd("\n".join(out) if out else str(out), padding="top")
@@ -1199,8 +1250,8 @@ class Look(object):
         for i, item in enumerate(_sequence):
             self._incr_just_size(just_size+minus)
             add_out(self._prefix(
-                i, self.pretty(item), just=just_size, color="blue",
-                separator=separator))
+                i, self.pretty(item, display=False), just=just_size,
+                color="blue", separator=separator))
             self._decr_just_size(just_size + minus)
         if not self._depth:
             return padd("\n".join(out) if out else str(out), padding="top")
@@ -1233,7 +1284,8 @@ class Look(object):
         for i, (k, item) in enumerate(_dict.items()):
             self._incr_just_size(just_size)
             add_out(self._dict_prefix(
-                k, self.pretty(item), i, dj=(just_size-minus), color="bold"))
+                k, self.pretty(item, display=False), i,
+                dj=(just_size-minus), color="bold"))
             self._decr_just_size(just_size)
         if not self._depth:
             return padd("\n".join(out) if out else str(out), padding="top")
@@ -1282,21 +1334,18 @@ class Look(object):
         _objname = "'{}'".format(colorize(_objname, "blue"))
         return _objname
 
-    def pretty_print(self, obj=None):
-        """ Formats and prints @obj or :prop:obj
-
-            @obj: the object you'd like to prettify
-        """
-        print(self.pretty(obj if obj is not None else self.obj))
-
-    def pretty(self, obj=None):
+    def pretty(self, obj=None, display=True):
         """ Formats @obj or :prop:obj
 
             @obj: the object you'd like to prettify
 
             -> #str pretty object
         """
-        return self._format_obj(obj if obj is not None else self.obj)
+        ret = self._format_obj(obj if obj is not None else self.obj)
+        if display:
+            print(ret)
+        else:
+            return ret
 
     def _format_obj(self, item=None):
         """ Determines the type of the object and maps it to the correct
@@ -1472,12 +1521,14 @@ class Logg(object):
     @prepr('loglevel')
     def __repr__(self): return
 
-    def __call__(self, *messages):
+    def __call__(self, *messages, **kwargs):
         """ :see::meth:Logg.__init__
 
             -> self
         """
         self.message = list(messages)
+        for name, val in kwargs.items():
+            setattr(self, name, val)
         return self
 
     def add(self, *messages):
@@ -1739,7 +1790,7 @@ class Logg(object):
     def format_message(self, message):
         """ Formats a message with :class:Look """
         look = Look(message)
-        return look.pretty()
+        return look.pretty(display=False)
 
     def format_messages(self, messages):
         """ Formats several messages with :class:Look, encodes them
@@ -1958,8 +2009,6 @@ class Timer(object):
         self._stop = time.perf_counter()
         self._callable = callable
         self._callableargs = (args, kwargs)
-        self._array = None
-        self._array_len = 0
         self.intervals = []
         self._intervals_len = 0
         self.precision = _precision
@@ -1974,20 +2023,7 @@ class Timer(object):
 
             -> :class:numpy.array
         """
-        if self._intervals_len:
-            if self._array_len != self._intervals_len:
-                if not self._array_len:
-                    self._array = np.array(self.intervals) \
-                        if hasattr(np, 'array') else self.intervals
-                else:
-                    self._array = np.concatenate((
-                        self._array, self.intervals), axis=0) \
-                        if hasattr(np, 'concatenate') else \
-                        (self._array + self.intervals)
-                self._array_len += len(self.intervals)
-                self.intervals = []
-            return self._array
-        return []
+        return self.intervals
 
     @property
     def latest(self):
@@ -2170,16 +2206,13 @@ class Timer(object):
         ])
 
     def info(self):
-        logg(self.stats, loglevel="v").log(
-            Look.pretty_objname(self._callable))
+        logg(self.stats).log(Look.pretty_objname(self._callable), force=True)
 
     def reset(self):
         """ Resets the time intervals """
         self._start = 0
         self._first_start = 0
         self._stop = time.perf_counter()
-        self._array = None
-        self._array_len = 0
         self.intervals = []
         self._intervals_len = 0
 

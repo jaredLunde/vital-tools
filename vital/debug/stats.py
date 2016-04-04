@@ -7,7 +7,7 @@
 
     Credit: http://stackoverflow.com/a/27758326
     Credit: http://stackoverflow.com/a/24101534
-    
+
 """
 
 

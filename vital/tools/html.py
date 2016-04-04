@@ -8,9 +8,6 @@
 import re
 import uuid
 
-import bleach
-import markdown
-from jinja2 import Markup
 from urllib.parse import quote
 
 from vital.tools.strings import hashtag_re, mentions_re
@@ -20,7 +17,6 @@ __all__ = (
     "whitespace_re",
     "js_comments_re",
     "remove_whitespace",
-    "jinja_markdown",
     "hashtag_links",
     "mentions_links",)
 
@@ -51,12 +47,6 @@ def remove_whitespace(s):
     for name, val in ignores.items():
         s = s.replace(name, val)
     return s
-
-
-def jinja_markdown(s, **markdown_args):
-    md = markdown.Markdown(**markdown_args)
-    return Markup(bleach.linkify(
-        md.convert(s), skip_pre=True, parse_email=True))
 
 
 def hashtag_links(uri, s):

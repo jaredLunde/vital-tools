@@ -8,7 +8,7 @@ from pkgutil import walk_packages
 
 PKG = 'vital'
 PKG_NAME = 'vital-tools'
-PKG_VERSION = '0.1.4'
+PKG_VERSION = '0.1.6'
 
 pathname = os.path.dirname(os.path.realpath(__file__))
 
@@ -30,7 +30,7 @@ def find_packages(prefix=""):
 setup(
     name=PKG_NAME,
     version=PKG_VERSION,
-    description='Vital tools for writing Python 3.5+ packages.',
+    description='Vital tools for writing Python 3.4+ packages.',
     author='Jared Lunde',
     author_email='jared.lunde@gmail.com',
     url='https://github.com/jaredlunde/vital-tools',
