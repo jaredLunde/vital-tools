@@ -1526,10 +1526,7 @@ class Logg(object):
 
             -> self
         """
-        self.message = list(messages)
-        for name, val in kwargs.items():
-            setattr(self, name, val)
-        return self
+        return self.__class__(*messages, **kwargs)
 
     def add(self, *messages):
         """ Adds a message or messages to the log messages (:attr:message)

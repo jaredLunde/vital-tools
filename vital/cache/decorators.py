@@ -16,8 +16,6 @@ import pickle
 
 from functools import wraps, partial, update_wrapper, lru_cache
 
-from vital.debug import prepr
-
 
 __all__ = (
   'local_lru',
@@ -340,9 +338,6 @@ class _pickle:
     def __init__(self, protocol=pickle.HIGHEST_PROTOCOL):
         """ @protocol: #int pickle protocol, highest protocol by default """
         self.protocol = protocol
-
-    @prepr('protocol', _break=False)
-    def __repr__(self): return
 
     def dumps(self, data):
         return pickle.dumps(data, self.protocol)

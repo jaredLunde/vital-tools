@@ -6,7 +6,7 @@
 
 """
 from threading import local
-from .decorators import *
+from vital.cache.decorators import *
 
 
 __all__ = (

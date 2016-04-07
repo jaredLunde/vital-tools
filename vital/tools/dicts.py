@@ -12,7 +12,8 @@ from collections import OrderedDict
 __all__ = (
     "merge_dict",
     "revrank_dict",
-    "rank_dict")
+    "rank_dict",
+    "getitem_in")
 
 
 def merge_dict(*dicts):
@@ -52,3 +53,18 @@ def rank_dict(dict, key=lambda t: t[1], as_tuple=False):
     """
     sorted_list = sorted(dict.items(), key=key)
     return OrderedDict(sorted_list) if not as_tuple else tuple(sorted_list)
+
+
+def getitem_in(obj, name):
+    """ Finds a key in @obj via a period-delimited string @name.
+        @obj: (#dict)
+        @name: (#str) |.|-separated keys to search @obj in
+        ..
+            obj = {'foo': {'bar': {'baz': True}}}
+            getitem_in(obj, 'foo.bar.baz')
+        ..
+        |True|
+    """
+    for part in name.split('.'):
+        obj = obj[part]
+    return obj
