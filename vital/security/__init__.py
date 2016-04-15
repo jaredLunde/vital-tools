@@ -199,8 +199,8 @@ def cookie(data, key_salt='', secret=None, digestmod=None):
         return None
     try:
         # Decode signed cookie
+        assert cookie_is_encoded(data)
         datab = uniorbytes(data, bytes)
-        assert cookie_is_encoded(datab)
         sig, msg = datab.split(uniorbytes('?', bytes), 1)
         key = ("{}{}").format(secret, key_salt)
         sig_check = hmac.new(
@@ -229,12 +229,11 @@ def cookie_is_encoded(data):
             from vital.security import cookie_is_encoded
 
             cookie_is_encoded(
-                b"!YuOoKwDp8GhrwwojdjTxSCj1c2Z+7yz7r6cC7E3hBWo=?IkhlbGxvLCB3b3JsZC4i")
+                "!YuOoKwDp8GhrwwojdjTxSCj1c2Z+7yz7r6cC7E3hBWo=?IkhlbGxvLCB3b3JsZC4i")
             # -> True
         ..
     """
-    return data.startswith(uniorbytes('!', bytes)) and \
-        uniorbytes('?', bytes) in data
+    return data.startswith('!') and '?' in data
 
 
 def strkey(val, chaffify=1, keyspace=string.ascii_letters+string.digits):
@@ -404,7 +403,7 @@ def randkey(bits, keyspace=string.ascii_letters + string.digits + '#/.',
         @rng: the random number generator to use. Defaults to
             :class:random.SystemRandom. Must have a |choice| method
 
-        -> #str random key
+        -> (#str) random key
 
         ..
             from vital.security import randkey

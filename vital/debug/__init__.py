@@ -2203,7 +2203,8 @@ class Timer(object):
         ])
 
     def info(self):
-        logg(self.stats).log(Look.pretty_objname(self._callable), force=True)
+        logg(self.stats, pretty=True).log(
+            Look.pretty_objname(self._callable), force=True)
 
     def reset(self):
         """ Resets the time intervals """
