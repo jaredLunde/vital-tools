@@ -28,12 +28,8 @@ def getattr_in(obj, name):
         ..
         |'deep value'|
     """
-    try:
-        ga = obj.__getattr__
-    except AttributeError:
-        ga = obj.__getattribute__
     for part in name.split('.'):
-        obj = ga(obj, part)
+        obj = getattr(obj, part)
     return obj
 
 

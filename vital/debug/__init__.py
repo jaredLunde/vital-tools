@@ -44,6 +44,7 @@ from codecs import getencoder
 from functools import wraps
 from collections import *
 
+from vital.tools import getattr_in
 from vital.tools.encoding import stdout_encode
 from . import colors, tlds
 
@@ -62,6 +63,7 @@ __all__ = (
   "gen_rand_str",
   "rand_readable",
   "prepr",
+  "preprX",
   "RandData",
   "Look",
   "Logg",
@@ -605,24 +607,28 @@ def preprX(*attributes, address=True, full_name=False,
     def _format(obj, attribute):
         try:
             if keyless:
-                return repr(getattr(obj, attribute))
+                val = getattr_in(obj, attribute)
+                if val is not None:
+                    return repr(val)
             else:
                 return '%s=%s' % (attribute,
-                                  repr(getattr(obj, attribute)))
+                                  repr(getattr_in(obj, attribute)))
         except AttributeError:
             return None
 
-    def prep(obj, address=address, full_name=False, pretty=False,
-             keyless=False, **kwargs):
+    def prep(obj, address=address, full_name=full_name, pretty=pretty,
+             keyless=keyless, **kwargs):
         if address:
             address = ":%s" % hex(id(obj))
         else:
             address = ""
         data = list(filter(lambda x: x is not None,
                            map(lambda a: _format(obj, a), attributes)))
-        return "<{name}{data}{address}>".format(name=get_obj_name(obj),
-                                                data=', '.join(data),
-                                                address=address)
+        if data:
+            data = ':%s' % ', '.join(data)
+        else:
+            data = ''
+        return "<%s%s%s>" % (get_obj_name(obj), data, address)
     return prep
 
 
