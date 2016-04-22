@@ -74,8 +74,8 @@ def uniorbytes(s, result=str, enc="utf-8", err="strict"):
     return s
 
 
-def recode_unicode(s, encoding=None):
-    """ Inputs are encoded to latin1 and then decoded to the desired
+def recode_unicode(s, encoding='utf-8'):
+    """ Inputs are encoded to utf-8 and then decoded to the desired
         output encoding
 
         @encoding: the desired encoding
@@ -83,7 +83,8 @@ def recode_unicode(s, encoding=None):
         -> #str with the desired @encoding
     """
     if isinstance(s, str):
-        return s.encode('latin1').decode(encoding or "utf8")
+        return s.encode().decode(encoding)
+    return s
 
 
 def fix_bad_unicode(text):
@@ -153,8 +154,8 @@ def fix_bad_unicode(text):
         This text was never Unicode at all…
     """
     if not isinstance(text, str):
-        raise TypeError("This isn't even decoded into Unicode yet. "
-                        "Decode it first.")
+        return text
+
     if len(text) == 0:
         return text
 
@@ -431,4 +432,6 @@ def stdout_encode(u, default='utf8'):
         -> #str with standard out encoding
     """
     encoding = sys.stdout.encoding or default
-    return u.encode(encoding, "replace").decode(encoding, "replace")
+    if encoding != 'utf8':
+        return u.encode(encoding, "replace").decode(encoding, "replace")
+    return u

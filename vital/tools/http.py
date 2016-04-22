@@ -8,7 +8,11 @@
 
 """
 import time
+import base64
+import email
 import datetime
+
+from vital.tools.encoding import uniorbytes
 
 
 __all__ = (
@@ -55,10 +59,11 @@ def parse_auth(header):
     try:
         method, data = header.split(None, 1)
         if method.lower() == 'basic':
-            user, pwd = touni(base64.b64decode(tob(data))).split(':', 1)
+            data = base64.b64decode(uniorbytes(data, bytes))
+            user, pwd = uniorbytes(data).split(':', 1)
             return user, pwd
-    except (KeyError, ValueError):
-        return None
+    except (KeyError, AttributeError, ValueError):
+        return (None, None)
 
 
 def parse_range_header(header, maxlen=0):
@@ -66,7 +71,8 @@ def parse_range_header(header, maxlen=0):
         unsatisfiable ranges. The end index is non-inclusive.
         ©2014, Marcel Hellkamp
     """
-    if not header or header[:6] != 'bytes=': return
+    if not header or header[:6] != 'bytes=':
+        return
     ranges = [r.split('-', 1) for r in header[6:].split(',') if '-' in r]
     for start, end in ranges:
         try:

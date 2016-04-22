@@ -545,9 +545,9 @@ def get_obj_name(obj, full=True):
     elif has_name_attr and obj.__name__:
         return obj.__name__.split(".")[-1]
     elif hasattr(obj, '__class__'):
-        return str(obj.__class__.__name__).strip("<>")
+        return obj.__class__.__name__.strip("<>")
     else:
-        return str(obj.__repr__())
+        return obj.__repr__()
 
 
 def format_obj_name(obj, delim="<>"):
@@ -628,7 +628,7 @@ def preprX(*attributes, address=True, full_name=False,
             data = ':%s' % ', '.join(data)
         else:
             data = ''
-        return "<%s%s%s>" % (get_obj_name(obj), data, address)
+        return stdout_encode("<%s%s%s>" % (get_obj_name(obj), data, address))
     return prep
 
 
@@ -1814,16 +1814,15 @@ class Logg(object):
                        reverse=False):
         """ Outputs the message to the terminal """
         if flag_message:
-            flag_message = stdout_encode(flag(
-                flag_message, color=color, show=False))
+            flag_message = stdout_encode(flag(flag_message,
+                                              color=color,
+                                              show=False))
             if not reverse:
-                print(
-                    padd(flag_message, padding),
-                    self.format_messages(self.message))
+                print(padd(flag_message, padding),
+                      self.format_messages(self.message))
             else:
-                print(
-                    self.format_messages(self.message),
-                    padd(flag_message, padding))
+                print(self.format_messages(self.message),
+                      padd(flag_message, padding))
         else:
             print(self.format_messages(self.message))
         self.message = []
