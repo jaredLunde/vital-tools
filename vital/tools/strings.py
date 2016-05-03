@@ -200,14 +200,14 @@ def get_hashtags(s):
 
         -> #list of lowercase hashtag #str objects
     """
-    return [r[0].lower() for r in hashtag_re.findall(s)]
+    return [r[0].lower() for r in hashtag_re.findall(str(s))]
 
 
 def get_mentions(s):
     """ Gets all @mentions-like matches in a string
         -> #list of lowercase mention #str objects
     """
-    return [r[0].lower() for r in mentions_re.findall(s)]
+    return [r[0].lower() for r in mentions_re.findall(str(s))]
 
 
 def remove_blank_lines(string):
@@ -215,10 +215,9 @@ def remove_blank_lines(string):
 
         -> #str without blank lines
     """
-    return "\n".join(
-        line
-        for line in string.split("\n")
-        if len(line.strip()))
+    return "\n".join(line
+                     for line in string.split("\n")
+                     if len(line.strip()))
 
 
 def to_plural(num, singular, plural):

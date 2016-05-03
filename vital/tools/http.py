@@ -18,7 +18,8 @@ from vital.tools.encoding import uniorbytes
 __all__ = (
   "http_date",
   "parse_date",
-  "parse_auth"
+  "parse_auth",
+  "parse_range_header"
 )
 
 

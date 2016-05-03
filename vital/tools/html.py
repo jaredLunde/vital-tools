@@ -18,7 +18,10 @@ __all__ = (
     "js_comments_re",
     "remove_whitespace",
     "hashtag_links",
-    "mentions_links",)
+    "mentions_links",
+    "nl2p",
+    "escape_json"
+)
 
 
 whitespace_re = re.compile(r"""\s+""").sub
@@ -76,3 +79,16 @@ def mentions_links(uri, s):
         link = '<a href="{}">@{}</a>{}'.format(_uri.lower(), username, after)
         s = s.replace('@' + username, link)
     return s
+
+
+_p_re = re.compile(r'(?:\r\n|\r|\n){2,}')
+
+
+def nl2p(string):
+    return ''.join(('<p>%s</p>' % s.replace('\n', '<br>')
+                   for s in _p_re.split(string)))
+
+
+def escape_json(string):
+    return string.replace('\\', '\\\\')\
+                 .replace('"', '\\"')
