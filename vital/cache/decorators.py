@@ -211,8 +211,7 @@ class DictProperty(object):
         ..
         Copyright © 2014, Marcel Hellkamp
     """
-    __all__ = ('attr', 'key', 'read_only', 'getter')
-    
+
     def __init__(self, attr, key=None, read_only=False):
         """ @attr: the local attribute name
             @key: the keyname to store in @attr
