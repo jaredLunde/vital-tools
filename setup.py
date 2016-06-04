@@ -17,7 +17,7 @@ def compat(min_version):
 
 PKG = 'vital'
 PKG_NAME = 'vital-tools'
-PKG_VERSION = '0.1.6'
+PKG_VERSION = '0.1.7'
 
 pathname = os.path.dirname(os.path.realpath(__file__))
 

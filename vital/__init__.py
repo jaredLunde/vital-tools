@@ -17,4 +17,4 @@ if tools.systools.compat('3.3'):
 
 __author__ = "Jared Lunde"
 __license__ = "MIT"
-__version__ = "0.1.6"
+__version__ = "0.1.7"
