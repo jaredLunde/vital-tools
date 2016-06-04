@@ -4,7 +4,7 @@
 
    `Shell colors`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 # Standard colors

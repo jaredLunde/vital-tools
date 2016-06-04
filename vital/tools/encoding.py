@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital Encoding tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
     Additional credits:
     http://blog.luminoso.com/2012/08/20/fix-unicode-mistakes-with-python/
@@ -374,11 +375,16 @@ SINGLE_BYTE_WEIRDNESS = (
 
 # Pre-cache the Unicode data saying which of these first 256 characters
 # are letters. We'll need it often.
-SINGLE_BYTE_LETTERS = [
-    unicodedata.category(chr(i))[0] == 'L'
-    for i in range(256)
-]
-
+try:
+    SINGLE_BYTE_LETTERS = [
+        unicodedata.category(chr(i))[0] == 'L'
+        for i in range(256)
+    ]
+except TypeError:
+    SINGLE_BYTE_LETTERS = [
+        unicodedata.category(unichr(i))[0] == 'L'
+        for i in range(256)
+    ]
 
 # A table telling us how to interpret the first word of a letter's Unicode
 # name. The number indicates how frequently we expect this script to be

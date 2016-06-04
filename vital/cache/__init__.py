@@ -1,17 +1,18 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital local caching tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
+import sys
 from threading import local
+
 from vital.cache.decorators import *
 
-
-__all__ = (
+_all = [
   'local_lru',
-  'async_lru',
   'typed_lru',
   'local_expiring_lru',
   'cached_property',
@@ -21,12 +22,21 @@ __all__ = (
   'sweet_pickle',
   'high_pickle'
   'local_property'
-)
+]
+
+from vital.tools import systools
+
+if systools.compat('3.4'):
+    from vital.cache.async_decorators import async_lru
+    _all.append(async_lru)
+
+
+__all__ = _all
 
 
 def local_property():
     """ Property structure which maps within the :func:local() thread
-        ©2014, Marcel Hellkamp
+        (c)2014, Marcel Hellkamp
     """
     ls = local()
 

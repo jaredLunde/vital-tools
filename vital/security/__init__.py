@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital Security` helpful functions for securing data
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 import os
@@ -332,7 +333,7 @@ def chars_in(bits, keyspace):
         chars = 0
         bits_processed = 0
         cycles = ceil(bits / bits_per_cycle)
-        for _ in range(cycles):
+        for _ in range(int(cycles)):
             if bits_processed + bits_per_cycle > bits:
                 bits_per_cycle = bits - bits_processed
             chars += calc_chars_in(bits_per_cycle, keyspace)
@@ -359,7 +360,7 @@ def bits_in(length, keyspace):
         bits = 0
         length_processed = 0
         cycles = ceil(length / length_per_cycle)
-        for _ in range(cycles):
+        for _ in range(int(cycles)):
             if length_processed + length_per_cycle > length:
                 length_per_cycle = length - length_processed
             bits += calc_bits_in(length_per_cycle, keyspace)
@@ -389,7 +390,7 @@ def iter_random_chars(bits,
     else:
         chars = chars_in(bits, keyspace)
     rng = rng or random.SystemRandom()
-    for char in range(ceil(chars)):
+    for char in range(int(ceil(chars))):
         yield rng.choice(keyspace)
 
 
@@ -440,4 +441,4 @@ def randstr(size, keyspace=string.ascii_letters + string.digits, rng=None):
         ..
     """
     rng = rng or random.SystemRandom()
-    return "".join(rng.choice(keyspace) for char in range(ceil(size)))
+    return "".join(rng.choice(keyspace) for char in range(int(ceil(size))))

@@ -1,10 +1,9 @@
-#!/usr/bin/python3 -S
 # -*- coding: utf-8 -*-
 """
 
   `Vital HTTP Tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-   The MIT License (MIT) © 2015 Marcel Hellkamp
+   The MIT License (MIT) (c) 2015 Marcel Hellkamp
 
 """
 import time
@@ -30,7 +29,7 @@ def http_date(value):
 
         -> #str HTTP-style formatted date
 
-        ©2014, Marcel Hellkamp
+        (c)2014, Marcel Hellkamp
     """
     if isinstance(value, datetime.datetime):
         value = value.utctimetuple()
@@ -43,7 +42,7 @@ def http_date(value):
 
 def parse_date(ims):
     """ Parse rfc1123, rfc850 and asctime timestamps and return UTC epoch.
-        ©2014, Marcel Hellkamp
+        (c)2014, Marcel Hellkamp
     """
     try:
         ts = email.utils.parsedate_tz(ims)
@@ -55,7 +54,7 @@ def parse_date(ims):
 def parse_auth(header):
     """ Parse rfc2617 HTTP authentication header string (basic) and return
         (user,pass) tuple or None
-        ©2014, Marcel Hellkamp
+        (c)2014, Marcel Hellkamp
     """
     try:
         method, data = header.split(None, 1)
@@ -70,7 +69,7 @@ def parse_auth(header):
 def parse_range_header(header, maxlen=0):
     """ Yield (start, end) ranges parsed from a HTTP Range header. Skip
         unsatisfiable ranges. The end index is non-inclusive.
-        ©2014, Marcel Hellkamp
+        (c)2014, Marcel Hellkamp
     """
     if not header or header[:6] != 'bytes=':
         return

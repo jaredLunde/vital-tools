@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 
    `Stats Tools`
     Drop-in functions when neither numpy or statistics can be imported
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
     Credit: http://stackoverflow.com/a/27758326
     Credit: http://stackoverflow.com/a/24101534

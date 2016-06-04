@@ -1,14 +1,13 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital Tools for manipulating Python data structures`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 import importlib
 from pydoc import locate, ErrorDuringImport
-
-from vital.cache.decorators import cached_property
 
 from vital.tools.dicts import *
 from vital.tools.encoding import *
@@ -48,14 +47,16 @@ def import_from(name):
             assert obj is not None
         except (AttributeError, TypeError, AssertionError, ErrorDuringImport):
             try:
-                *name, attr = name.split(".")
-                name = ".".join(name)
+                name = name.split(".")
+                attr = name[-1]
+                name = ".".join(name[:-1])
                 mod = importlib.import_module(name)
                 obj = getattr(mod, attr)
             except (SyntaxError, AttributeError, ImportError, ValueError):
                 try:
-                    *name, attr_sup = name.split(".")
-                    name = ".".join(name)
+                    name = name.split(".")
+                    attr_sup = name[-1]
+                    name = ".".join(name[:-1])
                     mod = importlib.import_module(name)
                     obj = getattr(getattr(mod, attr_sup), attr)
                 except:
@@ -76,9 +77,9 @@ def unwrap_obj(obj):
         pass
     try:
         # Cached properties
-        assert isinstance(obj, cached_property)
-        obj = obj.func
-    except AssertionError:
+        if obj.func.__doc__ == obj.__doc__:
+            obj = obj.func
+    except AttributeError:
         pass
     try:
         # Setter/Getters

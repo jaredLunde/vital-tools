@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital Dict Tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 from itertools import chain

@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital String Tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 import re

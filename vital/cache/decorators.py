@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 """
 
    `Vital local cache decorators`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 try:
@@ -14,12 +15,16 @@ import collections
 import datetime
 import pickle
 
-from functools import wraps, partial, update_wrapper, lru_cache
+from functools import wraps, partial, update_wrapper
+
+try:
+    from functools import lru_cache
+except ImportError:
+    pass
 
 
 __all__ = (
   'local_lru',
-  'async_lru',
   'typed_lru',
   'local_expiring_lru',
   'cached_property',
@@ -119,36 +124,6 @@ def typed_lru(maxsize, types=None):
     return lru
 
 
-try:
-    def async_lru(size=100):
-        """ An LRU cache for asyncio coroutines in Python 3.5
-            ..
-                @async_lru(1024)
-                async def slow_coroutine(*args, **kwargs):
-                    return await some_other_slow_coroutine()
-            ..
-        """
-        cache = collections.OrderedDict()
-
-        def decorator(fn):
-            @wraps(fn)
-            @asyncio.coroutine
-            def memoizer(*args, **kwargs):
-                key = str((args, kwargs))
-                try:
-                    result = cache.pop(key)
-                    cache[key] = result
-                except KeyError:
-                    if len(cache) >= size:
-                        cache.popitem(last=False)
-                    result = cache[key] = yield from fn(*args, **kwargs)
-                return result
-            return memoizer
-        return decorator
-except (SyntaxError, NameError, AttributeError):
-    async_lru = None
-
-
 def local_expiring_lru(obj):
     """ Property that maps to a key in a local dict-like attribute.
         self._cache must be an OrderedDict
@@ -209,7 +184,7 @@ class DictProperty(object):
             def expensive_func(self):
                 pass
         ..
-        Copyright © 2014, Marcel Hellkamp
+        Copyright (c) 2014, Marcel Hellkamp
     """
 
     def __init__(self, attr, key=None, read_only=False):
@@ -255,7 +230,7 @@ class cached_property(object):
             def expensive_func(self, arg):
                 pass
         ..
-        Copyright © 2014, Marcel Hellkamp
+        Copyright (c) 2014, Marcel Hellkamp
     """
     def __init__(self, func):
         """ @func: the wrapped method """
@@ -296,15 +271,14 @@ class memoize(object):
     def __repr__(self):
         return self.obj.__repr__()
 
-    def __call__(self, *args, _dict_getitem_=dict.__getitem__,
-                 _dict_setitem_=dict.__setitem__, **kwargs):
+    def __call__(self, *args, **kwargs):
         cache = self.data
         key = self._key(args, kwargs)
         try:
-            return _dict_getitem_(cache, key)
+            return dict.__getitem__(cache, key)
         except KeyError:
-            _dict_setitem_(cache, key, self.obj(*args, **kwargs))
-            return _dict_getitem_(cache, key)
+            dict.__setitem__(cache, key, self.obj(*args, **kwargs))
+            return dict.__getitem__(cache, key)
 
     def __get__(self, obj, objtype):
         '''Support instance methods.'''

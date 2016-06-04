@@ -1,14 +1,18 @@
+# -*- coding: utf-8 -*-
 """
 
   `Vital HTML Tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-   The MIT License (MIT) © 2016 Jared Lunde
+   The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 import re
 import uuid
 
-from urllib.parse import quote
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 from vital.tools.strings import hashtag_re, mentions_re
 

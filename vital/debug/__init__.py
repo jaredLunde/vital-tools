@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 
   `Vital Debugging Tools`
    Simple tools to debug and time your scripts & structures
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-   The MIT License (MIT) © 2014 Jared Lunde
+   The MIT License (MIT) (c) 2014 Jared Lunde
 
 """
 import os

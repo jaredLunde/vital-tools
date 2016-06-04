@@ -1,9 +1,18 @@
 #!/usr/bin/python3 -S
 import os
+import sys
 import uuid
 from setuptools import setup
 from pip.req import parse_requirements
 from pkgutil import walk_packages
+
+
+def compat(min_version):
+    ''' @min_version: (#str) minimum version number formatted like |2.7|
+            or |2.7.6|
+        -> (#bool) |True| if the system version is at least @min_version
+    '''
+    return sys.version_info >= tuple(map(int, min_version.split('.')))
 
 
 PKG = 'vital'
@@ -24,7 +33,10 @@ def find_packages(prefix=""):
     prefix = prefix + "."
     for _, name, ispkg in walk_packages(path, prefix):
         if ispkg:
-            yield name
+            if name == 'vital.cache.async_decorators' and not compat('3.4'):
+                pass
+            else:
+                yield name
 
 
 setup(

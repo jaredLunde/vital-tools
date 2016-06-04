@@ -1,14 +1,17 @@
-#!/usr/bin/python3 -S
 # -*- coding: utf-8 -*-
 """
 
    `Vital List Tools`
 --·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--·--
-    The MIT License (MIT) © 2016 Jared Lunde
+    The MIT License (MIT) (c) 2016 Jared Lunde
 
 """
 from random import SystemRandom as rng
-from collections import UserList
+
+try:
+    from collections import UserList
+except ImportError:
+    UserList = list
 
 
 def unique_list(seq):
