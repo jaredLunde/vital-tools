@@ -73,7 +73,7 @@ def is_username(string, minlen=1, maxlen=15):
 
 
 email_pattern = \
-    r"""[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]{0,63}\.[a-zA-Z\-0-9]{0,24}$"""
+    r"""[A-Za-z0-9\.\+_-]+@[A-Za-z0-9_-]{1,63}(\.[a-zA-Z\-0-9]{0,24})*$"""
 email_re = re.compile(email_pattern)
 def is_email(string):
     """ Determines whether the @string pattern is email-like

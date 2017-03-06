@@ -386,7 +386,7 @@ def iter_random_chars(bits,
                 do_something_with(char)
     """
     if bits < 8:
-        raise ValueError('Bits cannot be >8')
+        raise ValueError('Bits cannot be <8')
     else:
         chars = chars_in(bits, keyspace)
     rng = rng or random.SystemRandom()
