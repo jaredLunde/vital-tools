@@ -79,7 +79,7 @@ __all__ = (
 )
 
 
-def get_terminal_width():
+def get_terminal_width(default=80):
     """ -> #int width of the terminal window """
     # http://www.brandonrubin.me/2014/03/18/python-snippet-get-terminal-width/
     command = ['tput', 'cols']
@@ -89,10 +89,12 @@ def get_terminal_width():
         print(
             "Invalid Command '{0}': exit status ({1})".format(
                 command[0], e.errno))
+        return default
     except subprocess.CalledProcessError as e:
         print(
             "'{0}' returned non-zero exit status: ({1})".format(
                 command, e.returncode))
+        return default
     else:
         return width
 
