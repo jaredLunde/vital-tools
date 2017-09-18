@@ -170,7 +170,7 @@ def json_bigint_from_string(s):
 
 
 #: Username/Hashtag are in group \2
-mentions_pattern = r"""(?:^|[^@\w])@(\w{1,15})([\b\s]|$)"""
+mentions_pattern = r"""(?:^|[^@\w])@(\w{1,15})(\b|$)"""
 mentions_re = re.compile(mentions_pattern)
 try:
     # Wide UCS-4 build
@@ -192,7 +192,7 @@ except re.error:
         u'\u2600-\u26FF\u2700-\u27BF' +
         u']+)')
     hashtag_re_pattern = \
-        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'([\b\s]|$)?'
+        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'(\b|$)?'
     hashtag_re = re.compile(hashtag_re_pattern, re.UNICODE | re.M)
 
 

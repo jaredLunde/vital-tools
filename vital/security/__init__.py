@@ -45,7 +45,8 @@ def aes_b64_encrypt(value, secret, block_size=AES.block_size):
             # -> 'Hello, world'
         ..
     """
-    iv = randstr(block_size * 2, rng=random)
+    # iv = randstr(block_size * 2, rng=random)
+    iv = randstr(block_size * 2)
     cipher = AES.new(secret[:32], AES.MODE_CFB, iv[:block_size].encode())
     return iv + b64encode(cipher.encrypt(
         uniorbytes(value, bytes))).decode('utf-8')
@@ -237,7 +238,7 @@ def cookie_is_encoded(data):
     return data.startswith('!') and '?' in data
 
 
-def strkey(val, chaffify=1, keyspace=string.ascii_letters+string.digits):
+def strkey(val, chaffify=1, keyspace=string.ascii_letters + string.digits):
     """ Converts integers to a sequence of strings, and reverse.
         This is not intended to obfuscate numbers in any kind of
         cryptographically secure way, in fact it's the opposite. It's
@@ -246,7 +247,8 @@ def strkey(val, chaffify=1, keyspace=string.ascii_letters+string.digits):
         length.
 
         @val: #int or #str
-        @chaffify: #int multiple to avoid 1=b, 2=c, ... obfuscates the ordering
+        @chaffify: #int multiple to avoid 0=a, 1=b, 2=c, ... obfuscates the
+            ordering
         @keyspace: #str allowed output chars
 
         -> #str if @val is #int, #int if @val is #str
@@ -270,17 +272,23 @@ def strkey(val, chaffify=1, keyspace=string.ascii_letters+string.digits):
     keylen = len(keyspace)
     try:
         # INT TO STRING
-        # must be a positive integer
-        if val < 2:
-            raise ValueError("Input value must be greater than 1.")
+        if val < 0:
+            raise ValueError("Input value must be greater than -1.")
+
         # chaffify the value
         val = val * chaffify
+
+        if val == 0:
+            return keyspace[0]
+
         # output the new string value
         out = []
         out_add = out.append
+        
         while val > 0:
             val, digit = divmod(val, keylen)
             out_add(keyspace[digit])
+
         return "".join(out)[::-1]
     except TypeError:
         # STRING TO INT
