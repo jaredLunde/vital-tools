@@ -73,7 +73,7 @@ def is_username(string, minlen=1, maxlen=15):
 
 
 email_pattern = \
-    r"""[A-Za-z0-9\.\+_-]+@[A-Za-z0-9_-]{1,63}(\.[a-zA-Z\-0-9]{0,24})*$"""
+    r"""[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]{0,63}\.[a-zA-Z\-0-9]{0,24}$"""
 email_re = re.compile(email_pattern)
 def is_email(string):
     """ Determines whether the @string pattern is email-like
@@ -170,7 +170,7 @@ def json_bigint_from_string(s):
 
 
 #: Username/Hashtag are in group \2
-mentions_pattern = r"""(?:^|[^@\w])@(\w{1,15})(\b|$)"""
+mentions_pattern = r"""(?:^|[^@\w])@(\w{1,15})([\b\s]|$)"""
 mentions_re = re.compile(mentions_pattern)
 try:
     # Wide UCS-4 build
@@ -181,7 +181,7 @@ try:
         u'\u2600-\u26FF\u2700-\u27BF' +
         u']+)')
     hashtag_re_pattern = \
-        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'(\b|$)?'
+        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'([\b\s]|$)?'
     hashtag_re = re.compile(hashtag_re_pattern, re.UNICODE | re.M)
 except re.error:
     # Narrow UCS-2 build
@@ -192,7 +192,7 @@ except re.error:
         u'\u2600-\u26FF\u2700-\u27BF' +
         u']+)')
     hashtag_re_pattern = \
-        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'(\b|$)?'
+        u'(?:^|[^#\w\@]*)#' + hashtag_pattern + u'([\b\s]|$)?'
     hashtag_re = re.compile(hashtag_re_pattern, re.UNICODE | re.M)
 
 
@@ -201,14 +201,14 @@ def get_hashtags(s):
 
         -> #list of lowercase hashtag #str objects
     """
-    return [r[0] for r in hashtag_re.findall(str(s))]
+    return [r[0].lower() for r in hashtag_re.findall(str(s))]
 
 
 def get_mentions(s):
     """ Gets all @mentions-like matches in a string
         -> #list of lowercase mention #str objects
     """
-    return [r[0] for r in mentions_re.findall(str(s))]
+    return [r[0].lower() for r in mentions_re.findall(str(s))]
 
 
 def remove_blank_lines(string):

@@ -1,0 +1,20 @@
+{
+  "uploadOnSave": true,
+  "hostname": "54.152.147.153",
+  "port": "22",
+  "target": "git/vital-tools",
+  "ignore": [
+    ".git/**"
+  ],
+  "username": "jared",
+  "keyfile": "/Users/jaredlunde/Documents/Keys/jared",
+  "transport": "scp",
+  "ignore": [
+    ".git/**",
+    ".DS_STORE",
+    ".remote-sync.json",
+    "**/__pycache__/**",
+    "**/node_modules/**",
+    "**/closure-library/**"
+  ]
+}
