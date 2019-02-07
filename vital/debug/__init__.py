@@ -82,7 +82,8 @@ __all__ = (
 def get_terminal_width(default=80):
     """ -> #int width of the terminal window """
     # http://www.brandonrubin.me/2014/03/18/python-snippet-get-terminal-width/
-    command = ['tput', 'cols']
+    return default
+    '''command = ['tput', 'cols']
     try:
         width = int(subprocess.check_output(command))
     except OSError as e:
@@ -96,7 +97,7 @@ def get_terminal_width(default=80):
                 command, e.returncode))
         return default
     else:
-        return width
+        return width'''
 
 
 def line(separator="-·-", color=None, padding=None, num=1):
@@ -266,7 +267,7 @@ def cut(text, length=50, replace_with="…"):
     return text
 
 
-def flag(text=None, color=None, padding=None, show=True):
+def flag(text=None, color=None, padding=None, show=True, brackets='⸨⸩'):
     """ Wraps @text in parentheses (), optionally colors and pads and
         prints the text.
 
@@ -296,7 +297,14 @@ def flag(text=None, color=None, padding=None, show=True):
     """
     _flag = None
     if text:
-        _flag = padd("({})".format(colorize(text, color)), padding)
+        _flag = padd(
+            "{}{}{}".format(
+                brackets[0],
+                colorize(text, color) if color else text,
+                brackets[1]
+            ),
+            padding
+        )
         if not show:
             return _flag
         else:
@@ -1818,7 +1826,7 @@ class Logg(object):
         """ Outputs the message to the terminal """
         if flag_message:
             flag_message = stdout_encode(flag(flag_message,
-                                              color=color,
+                                              color=color if self.pretty else None,
                                               show=False))
             if not reverse:
                 print(padd(flag_message, padding),

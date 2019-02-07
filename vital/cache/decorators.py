@@ -233,15 +233,15 @@ class cached_property(object):
         Copyright (c) 2014, Marcel Hellkamp
     """
     def __init__(self, func):
-        """ @func: the wrapped method """
         self.__doc__ = func.__getattribute__('__doc__')
         self.func = func
 
     def __get__(self, obj, cls):
         if obj is None:
             return self
-        obj.__dict__[self.func.__name__] = self.func(obj)
-        return obj.__dict__[self.func.__name__]
+        
+        value = obj.__dict__[self.func.__name__] = self.func(obj)
+        return value
 
 
 class memoize(object):
